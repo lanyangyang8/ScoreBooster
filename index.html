@@ -1,0 +1,2963 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI错题提分教练 - 数学专版</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/lib/axios.js"></script>
+    <script src="js/lib/tex-mml-chtml.js"></script>
+    <script src="js/helpers/trial.js"></script>
+    <script src="js/helpers/login.js"></script>
+    <script src="js/utils/identify.js"></script>
+    <script src="js/helpers/tool.js"></script>
+
+    <script src="js/utils/workflow.js"></script>
+    <script src="js/helpers/InitializeAIQuestionPage.js"></script>
+    <script src="js/helpers/highFrequency.js"></script>
+    <script src="js/helpers/DBUtil.js"></script>
+    <script src="js/helpers/initialPageData.js"></script>
+
+</head>
+
+
+<body>
+    <div class="app-container">
+        <!-- 桌面端侧边导航 -->
+        <div class="desktop-sidebar" id="desktopSidebar">
+            <button class="toggle-sidebar" id="toggleSidebar" onclick="toggleSidebar()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="desktop-user-info">
+                <div class="desktop-user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="desktop-user-name">未登录</div>
+                
+                <!-- 新增省市标识 -->
+                <div class="desktop-user-location">浙江 杭州</div>
+                <div class="desktop-user-grade">初三</div>
+            </div>
+            
+            <!-- 上传按钮放在导航上方 -->
+            <button class="desktop-upload-btn" id="desktopUploadBtn">
+                <i class="fas fa-upload"></i>
+                <span>上传题目</span>
+            </button>
+            
+            <div class="desktop-nav-items">
+                <div class="desktop-nav-item active" data-target="homePage">
+                    <i class="fas fa-home" title="首页"></i>
+                    <span class="desktop-nav-text">首页</span>
+                    <div class="sidebar-tooltip">首页</div>
+                </div>
+                <div class="desktop-nav-item" data-target="questionBankPage">
+                    <i class="fas fa-book" title="题库"></i>
+                    <span class="desktop-nav-text">题库</span>
+                    <div class="sidebar-tooltip">题库</div>
+                </div>
+                <div class="desktop-nav-item" data-target="reportPage">
+                    <i class="fas fa-chart-pie" title="报告"></i>
+                    <span class="desktop-nav-text">报告</span>
+                    <div class="sidebar-tooltip">报告</div>
+                </div>
+            </div>
+            
+            <!-- 用户中心菜单项 -->
+            <div class="desktop-user-center">
+                <div class="desktop-nav-item" data-target="userPage">
+                    <i class="fas fa-user-cog" title="个人中心"></i>
+                    <span class="desktop-nav-text">个人中心</span>
+                    <div class="sidebar-tooltip">个人中心</div>
+                </div>
+                <!-- 已移除帮助中心和退出登录按钮 -->
+            </div>
+        </div>
+        
+        <!-- 顶部导航栏 -->
+        <div class="navbar">
+            <!--<div class="nav-title">
+                <i class="fas fa-robot"></i>
+                <span id="pageTitle">数学错题提分教练</span>
+            </div>
+            &lt;!&ndash; 添加试用次数显示 &ndash;&gt;
+            <div class="nav-trial-count" id="navTrialCount">
+                <i class="fas fa-gift"></i>
+                <span>试用: 5次</span>
+            </div>-->
+        </div>
+        
+        <!-- 主内容区 - 页面容器 -->
+        <div class="content" id="contentArea">
+            <!-- 首页 -->
+            <div class="page active" id="homePage">
+                <div class="content-grid">
+                    <div class="grid-column">
+
+                        <div class="trial-card">
+                            <div class="trial-card-content">
+                                <div class="trial-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="trial-text">
+                                    <h3>数学提分宝</h3>
+                                   <!-- <p>剩余 <strong>5</strong> 次免费识别机会</p>-->
+                                </div>
+                                <button class="trial-btn" onclick="showLoginModal()">
+                                    登录
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 薄弱点卡片（在电脑端隐藏） -->
+                        <div class="weakness-card">
+                            <div class="card-header">
+                                <div class="card-title">薄弱知识点分析</div>
+                                <div class="view-all" onclick="showKnowledgeDetail()">查看详情</div>
+                            </div>
+                            
+                            <div class="knowledge-grid">
+                                <div class="knowledge-card">
+                                    <div class="icon">
+                                        <i class="fas fa-function"></i>
+                                    </div>
+                                    <div class="knowledge-name">函数图像</div>
+                                    <div class="knowledge-progress">
+                                        <div class="progress-fill" style="width: 45%;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="knowledge-card">
+                                    <div class="icon">
+                                        <i class="fas fa-shapes"></i>
+                                    </div>
+                                    <div class="knowledge-name">几何证明</div>
+                                    <div class="knowledge-progress">
+                                        <div class="progress-fill" style="width: 60%;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="knowledge-card">
+                                    <div class="icon">
+                                        <i class="fas fa-superscript"></i>
+                                    </div>
+                                    <div class="knowledge-name">代数方程</div>
+                                    <div class="knowledge-progress">
+                                        <div class="progress-fill" style="width: 75%;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="knowledge-card">
+                                    <div class="icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="knowledge-name">概率统计</div>
+                                    <div class="knowledge-progress">
+                                        <div class="progress-fill" style="width: 30%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 高频考点卡片 -->
+                        <div class="exam-points">
+                            <div class="card-header">
+                                <div class="card-title">中考高频考点</div>
+                               <!-- <div class="view-all" onclick="showAllExamPoints()">全部考点</div>-->
+                            </div>
+                            
+                            <div class="point-grid" id="point-grid-card">
+
+                              <!--
+                                <div class="point-card" data-point="一元二次方程">
+                                    <div class="icon">
+                                        <i class="fas fa-superscript"></i>
+                                    </div>
+                                    <div class="point-name">一元二次方程</div>
+                                    <div class="point-frequency">近5年出现率: 92%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="三角形证明">
+                                    <div class="icon">
+                                        <i class="fas fa-shapes"></i>
+                                    </div>
+                                    <div class="point-name">三角形证明</div>
+                                    <div class="point-frequency">近5年出现率: 85%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="二次函数">
+                                    <div class="icon">
+                                        <i class="fas fa-function"></i>
+                                    </div>
+                                    <div class="point-name">二次函数</div>
+                                    <div class="point-frequency">近5年出现率: 78%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="概率计算">
+                                    <div class="icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="point-name">概率计算</div>
+                                    <div class="point-frequency">近5年出现率: 65%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="三角函数">
+                                    <div class="icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="point-name">三角函数</div>
+                                    <div class="point-frequency">近5年出现率: 72%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="立体几何">
+                                    <div class="icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="point-name">立体几何</div>
+                                    <div class="point-frequency">近5年出现率: 68%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="数列">
+                                    <div class="icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="point-name">数列</div>
+                                    <div class="point-frequency">近5年出现率: 62%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="平面向量">
+                                    <div class="icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="point-name">平面向量</div>
+                                    <div class="point-frequency">近5年出现率: 58%</div>
+                                </div>
+                                
+                                <div class="point-card" data-point="解析几何">
+                                    <div class="icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="point-name">解析几何</div>
+                                    <div class="point-frequency">近5年出现率: 70%</div>
+                                </div>-->
+
+
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-column">
+                        <!-- 错题列表 -->
+                        <div class="card-header">
+                            <div class="card-title">最近错题</div>
+                        
+                        </div>
+                        
+                        <div class="mistake-list" id="mistake-list-recent">
+
+                       <!--     <div class="mistake-item" onclick="showDetail('一元二次方程解法')">
+                                <div class="subject-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <div class="mistake-info">
+                                    <div class="mistake-title">一元二次方程解法</div>
+                                    <div class="mistake-desc">错误5次</div>
+                                </div>
+                                <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="time-tag">2023-10-15</div>
+                            </div>
+                            
+                            <div class="mistake-item" onclick="showDetail('三角形证明题')">
+                                <div class="subject-icon">
+                                    <i class="fas fa-shapes"></i>
+                                </div>
+                                <div class="mistake-info">
+                                    <div class="mistake-title">三角形证明题</div>
+                                    <div class="mistake-desc">错误3次</div>
+                                </div>
+                                <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="time-tag">2023-10-12</div>
+                            </div>
+                            
+                            <div class="mistake-item" onclick="showDetail('函数图像分析')">
+                                <div class="subject-icon">
+                                    <i class="fas fa-function"></i>
+                                </div>
+                                <div class="mistake-info">
+                                    <div class="mistake-title">函数图像分析</div>
+                                    <div class="mistake-desc">错误7次</div>
+                                </div>
+                                <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="time-tag">2023-10-10</div>
+                            </div>
+-->
+
+                        </div>
+                        
+                        <!-- 推荐练习 -->
+                        <div class="card-header" style="margin-top: 20px;">
+                            <div class="card-title">今日推荐练习</div>
+                        </div>
+                        
+                        <div class="mistake-list" id="mistake-list-recommend">
+
+                         <!--   <div class="mistake-item" onclick="showDetail('代数方程专项训练')">
+                                <div class="subject-icon">
+                                    <i class="fas fa-superscript"></i>
+                                </div>
+                                <div class="mistake-info">
+                                    <div class="mistake-title">代数方程专项训练</div>
+                                    <div class="mistake-desc">5道精选题目</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mistake-item" onclick="showDetail('概率统计小测验')">
+                                <div class="subject-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <div class="mistake-info">
+                                    <div class="mistake-title">概率统计小测验</div>
+                                    <div class="mistake-desc">3道基础题目</div>
+                                </div>
+                            </div>-->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 题库页面 -->
+            <div class="page" id="questionBankPage">
+                <div class="tabs">
+                    <!-- 添加AI题库标签 -->
+                    <div class="tab ai-tab active" data-tab="smart">AI题库</div>
+                    <div class="tab" data-tab="smart">智能题库</div>
+                    <div class="tab" data-tab="history">错题本</div>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索知识点或题目关键词...">
+                    <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                <!-- 新增知识点筛选标签容器 -->
+                <div class="knowledge-filter-container" id="knowledgeFilterContainer">
+                    <div class="filter-tags" id="filterTags">
+                        <!-- 标签将通过JS动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 智能题库内容 -->
+                <div class="smart-content active" id="smartContent">
+                  <!--  <div class="category-card" data-id="1" onclick="showAILibraryDetail('代数方程')">
+                        <div class="delete-btn" onclick="deleteCard(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <i class="fas fa-superscript"></i>
+                            </div>
+                            <div>
+                                <div class="category-title">代数方程</div>
+                                <div class="question-count">共128道题目</div>
+                            </div>
+                        </div>
+                        <div class="difficulty-tags">
+                            <div class="difficulty-tag tag-easy">简单题 42道</div>
+                            <div class="difficulty-tag tag-medium">中等题 56道</div>
+                            <div class="difficulty-tag tag-hard">难题 30道</div>
+                        </div>
+                        <div class="knowledge-time">2023-10-20</div>
+                    </div>
+                    
+                    <div class="category-card" data-id="2" onclick="showAILibraryDetail('几何证明')">
+                        <div class="delete-btn" onclick="deleteCard(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <i class="fas fa-shapes"></i>
+                            </div>
+                            <div>
+                                <div class="category-title">几何证明</div>
+                                <div class="question-count">共96道题目</div>
+                            </div>
+                        </div>
+                        <div class="difficulty-tags">
+                            <div class="difficulty-tag tag-easy">简单题 28道</div>
+                            <div class="difficulty-tag tag-medium">中等题 48道</div>
+                            <div class="difficulty-tag tag-hard">难题 20道</div>
+                        </div>
+                        <div class="knowledge-time">2023-10-18</div>
+                    </div>
+                    
+                    <div class="category-card" data-id="3" onclick="showAILibraryDetail('函数图像')">
+                        <div class="delete-btn" onclick="deleteCard(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <i class="fas fa-function"></i>
+                            </div>
+                            <div>
+                                <div class="category-title">函数图像</div>
+                                <div class="question-count">共112道题目</div>
+                            </div>
+                        </div>
+                        <div class="difficulty-tags">
+                            <div class="difficulty-tag tag-easy">简单题 35道</div>
+                            <div class="difficulty-tag tag-medium">中等题 52道</div>
+                            <div class="difficulty-tag tag-hard">难题 25道</div>
+                        </div>
+                        <div class="knowledge-time">2023-10-15</div>
+                    </div>-->
+                </div>
+                
+                <!-- 错题本内容 -->
+                <div class="smart-content" id="historyContent">
+                    <div class="card-header">
+                        <div class="card-title">数学错题本</div>
+                        <div class="view-all">管理</div>
+                    </div>
+
+<!--
+                    <div class="history-item" onclick="showDetail('一元二次方程解法','答案','解析','一元方程')">
+                        <div class="checkbox" onclick="toggleSelect(event, this)"></div>
+                       &lt;!&ndash; <div class="history-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>&ndash;&gt;
+                        <div class="history-content">
+                            <div class="history-title">一元二次方程解法</div>
+                            <div class="history-answer-hide">答案</div>
+                            <div class="history-analysis-hide">分析</div>
+                            <div class="history-points">一元方程</div>
+                        </div>
+                        <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="time-tag">2023-10-15</div>
+                    </div>
+                    
+                    <div class="history-item" onclick="showDetail('三角形证明题')">
+                        <div class="checkbox" onclick="toggleSelect(event, this)"></div>
+                        <div class="history-icon">
+                            <i class="fas fa-shapes"></i>
+                        </div>
+                        <div class="history-content">
+                            <div class="history-title">三角形证明题</div>
+                            <div class="history-answer-hide">答案</div>
+                            <div class="history-analysis-hide">分析</div>
+                            <div class="history-points">几何 · 步骤缺失</div>
+                        </div>
+                        <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="time-tag">2023-10-12</div>
+                    </div>
+                    
+                    <div class="history-item" onclick="showDetail('函数图像分析')">
+                        <div class="checkbox" onclick="toggleSelect(event, this)"></div>
+                        <div class="history-icon">
+                            <i class="fas fa-function"></i>
+                        </div>
+                        <div class="history-content">
+                            <div class="history-title">函数图像分析</div>
+                            <div class="history-answer-hide">答案</div>
+                            <div class="history-analysis-hide">分析</div>
+                            <div class="history-points">函数 · 概念混淆</div>
+                        </div>
+                        <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="time-tag">2023-10-10</div>
+                    </div>
+                    
+                    <div class="history-item" onclick="showDetail('概率统计应用题')">
+                        <div class="checkbox" onclick="toggleSelect(event, this)"></div>
+                        <div class="history-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="history-content">
+                            <div class="history-title">概率统计应用题</div>
+                            <div class="history-answer-hide">答案</div>
+                            <div class="history-analysis-hide">分析</div>
+                            <div class="history-points">概率 · 审题不清</div>
+                        </div>
+                        <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="time-tag">2023-10-08</div>
+                    </div>-->
+
+
+                </div>
+            </div>
+            
+            <!-- 报告页面 -->
+            <div class="page" id="reportPage">
+                <div class="card-header" style="margin-bottom: 20px;">
+                    <div class="card-title">学习分析报告</div>
+                    <div class="view-all report-export-btn" onclick="exportReport()">
+                        <i class="fas fa-download"></i>
+                        
+                        <i class="fas fa-copy" onclick="copyReportContent(event)"></i>
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <div class="card-header">
+                        <div class="card-title">学习概览</div>
+                    </div>
+                    
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-number">86</div>
+                            <div class="stat-label">消灭错题</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">32</div>
+                            <div class="stat-label">学习天数</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">18</div>
+                            <div class="stat-label">掌握知识点</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">94%</div>
+                            <div class="stat-label">正确率</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <div class="card-header">
+                        <div class="card-title">知识点掌握情况</div>
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>函数图像</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="knowledge-progress">
+                            <div class="progress-fill" style="width: 45%;"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin: 15px 0 8px;">
+                            <span>几何证明</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="knowledge-progress">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin: 15px 0 8px;">
+                            <span>代数方程</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="knowledge-progress">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin: 15px 0 8px;">
+                            <span>概率统计</span>
+                            <span>30%</span>
+                        </div>
+                        <div class="knowledge-progress">
+                            <div class="progress-fill" style="width: 30%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <div class="card-header">
+                        <div class="card-title">提升建议</div>
+                    </div>
+                    
+                    <ul class="suggestion-list">
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            <div>
+                                <strong>函数图像变换</strong>
+                                <div style="font-size: 14px; margin-top: 5px;">错误率68%，建议完成专项练习</div>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            <div>
+                                <strong>几何证明题</strong>
+                                <div style="font-size: 14px; margin-top: 5px;">错误率54%，建议学习辅助线技巧</div>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-lightbulb"></i>
+                            <div>
+                                <strong>概率应用题</strong>
+                                <div style="font-size: 14px; margin-top: 5px;">错误率42%，建议多做实际应用题</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 用户中心页面 -->
+            <div class="page" id="userPage">
+                <div class="user-header">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-name">张同学</div>
+                    <div class="user-grade">初三</div>
+                </div>
+                
+                <div class="menu-list">
+                    <div class="menu-item" onclick="openUserInfoModal()">
+                        <div class="menu-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="menu-text">个人信息</div>
+                        <div class="menu-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    <div class="menu-item" id="notificationBtn">
+                        <div class="menu-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="menu-text">消息通知</div>
+                        <div class="menu-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                  <!--  <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <div class="menu-text">系统设置</div>
+                        <div class="menu-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <div class="menu-text">帮助中心</div>
+                        <div class="menu-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>-->
+                    <!-- 新增退出登录选项 -->
+                    <div class="menu-item" id="logoutOption">
+                        <div class="menu-icon">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </div>
+                        <div class="menu-text">退出登录</div>
+                        <div class="menu-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 拍照按钮 -->
+        <div class="camera-btn" id="cameraBtn" onmousedown="startDrag(event)">
+            <i class="fas fa-camera"></i>
+            <div class="trial-count-badge" id="cameraTrialCount">5</div>
+        </div>
+        
+        <!-- 操作栏 -->
+        <div class="action-bar" id="actionBar">
+            <button class="action-btn" onclick="showOriginalQuestions()">
+                <i class="fas fa-search"></i> 查看原题
+            </button>
+           <!-- <button class="action-btn" onclick="showHistoricalQuestions()">
+                <i class="fas fa-search"></i> 查找历年题
+            </button>-->
+            <button class="action-btn" onclick="showAIQuestions()">
+                <i class="fas fa-robot"></i> AI生成练习题
+            </button>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <div class="nav-item active" data-target="homePage">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </div>
+            <div class="nav-item" data-target="questionBankPage">
+                <i class="fas fa-book"></i>
+                <span>题库</span>
+            </div>
+            <div class="nav-item" data-target="reportPage">
+                <i class="fas fa-chart-pie"></i>
+                <span>报告</span>
+            </div>
+            <div class="nav-item" data-target="userPage">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </div>
+        </div>
+        
+        <!-- 题目详情页 -->
+        <div class="question-detail" id="detailPage">
+            <div class="question-image" style="position:relative;">
+                <div class="back-btn" onclick="hideDetail()">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <img src="https://via.placeholder.com/300x400?text=数学错题示例" alt="错题图片">
+                <!-- 电脑端右上角导出/复制图标 -->
+                <div class="image-actions" style="display:none;">
+                  <!--  <button class="icon-btn" onclick="exportAnalysis()" title="导出"><i class="fas fa-download"></i></button>-->
+                    <button class="icon-btn" onclick="copyAnalysisContent()" title="复制"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+            
+            <div class="desktop-back-btn" onclick="hideDetail()">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            
+            <div class="analysis-section">
+                <!-- 电脑端分析区域操作按钮 -->
+               
+                
+               <!-- <div class="section-title">
+                    <i class="fas fa-diagnoses"></i>
+                    <span id="detailTitle">AI诊断分析</span>
+                </div>-->
+                
+                <div class="solution-steps">
+
+
+                    <div class="step-item">
+
+                        <div class="step-content">
+
+                            <!-- 习题项 -->
+                            <div class="exercise-item">
+                                <div class="exercise-content">
+                                    <div class="exercise-question" id="exercise-question">
+                                        已知二次函数 \( f(x) = x^2 - 4x + 3 \)。求该函数的顶点坐标；
+                                    </div>
+
+                                    <div class="exercise-answer">
+                                        <div class="answer-label">答案</div>
+                                        <div class="answer-content" id="answer-content">
+                                                    图像：开口向上的抛物线，顶点在(2,-1)，经过(1,0)和(3,0)
+                                                    图像：开口向上的抛物线，顶点在(2,-1)，经过(1,0)和(3,0)
+                                                    图像：开口向上的抛物线，顶点在(2,-1)，经过(1,0)和(3,0)
+                                        </div>
+                                    </div>
+
+                                    <div class="exercise-analysis">
+                                        <div class="analysis-label">解析</div>
+                                        <div class="analysis-content" id="analysis-content">
+                                             顶点坐标可以通过公式 \( x = -\frac{b}{2a} \) 求得：
+                                        </div>
+                                    </div>
+
+                                    <div class="exercise-meta">
+                                        <div class="exercise-tags">
+                                            <div class="tag" id="exercise-tags">二次函数</div>
+                                        </div>
+                                        <div class="exercise-time">
+                                            <i class="far fa-clock"></i>
+                                            <span id="exercise-date-time"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                 <!--   <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            代入求根公式：x = [-b ± √(b²-4ac)] / (2a)
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            计算判别式：Δ = b² - 4ac = (-5)² - 4×1×6 = 25 - 24 = 1
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            代入求根：x = [5 ± √1]/2 = [5 ± 1]/2 → x₁=3, x₂=2
+                        </div>
+                    </div>-->
+
+
+                </div>
+                
+                <!--<div class="section-title">
+                    <i class="fas fa-history"></i>
+                    <span>历年相似考题</span>
+                </div>
+                
+                <div class="mistake-list">
+                    <div class="mistake-item" onclick="showDetail('2022年中考数学第15题')">
+                        <div class="subject-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="mistake-info">
+                            <div class="mistake-title">2022年中考数学第15题</div>
+                            <div class="year-info">2023年中考 · 单选第五题</div>
+                            <div class="mistake-desc">一元二次方程求解</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mistake-item" onclick="showDetail('2021年中考数学第18题')">
+                        <div class="subject-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="mistake-info">
+                            <div class="mistake-title">2021年中考数学第18题</div>
+                            <div class="year-info">2021年中考 · 解答题第三题</div>
+                            <div class="mistake-desc">方程应用题</div>
+                        </div>
+                    </div>
+                </div>-->
+
+
+            </div>
+        </div>
+        
+        <!-- AI题库详情页 -->
+        <div class="question-detail" id="aiLibraryPage">
+            <div class="question-image" style="position:relative;">
+                <div class="back-btn" onclick="hideAILibraryDetail()">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <!-- 电脑端右上角导出/复制图标 -->
+                <div class="image-actions" style="display:none;">
+                 <!--   <button class="icon-btn" onclick="exportAILibrary()" title="导出"><i class="fas fa-download"></i></button>-->
+                    <button class="icon-btn" onclick="copyAILibraryContent()" title="复制"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+            
+            <div class="desktop-back-btn" onclick="hideAILibraryDetail()">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            
+            <div class="analysis-section">
+                <div class="ai-library-detail">
+                    <div class="ai-library-title" id="aiLibraryTitle">
+                        <i class="fas fa-star"></i>
+                        <span>AI题库详情</span>
+                    </div>
+                    <div class="ai-library-meta">
+                        <div class="ai-library-meta-item">
+                            <div class="meta-label">题目数量</div>
+                            <div class="meta-value">128题</div>
+                        </div>
+                        <div class="ai-library-meta-item">
+                            <div class="meta-label">创建时间</div>
+                            <div class="meta-value">2023-10-20</div>
+                        </div>
+                        <div class="ai-library-meta-item">
+                            <div class="meta-label">掌握程度</div>
+                            <div class="meta-value">75%</div>
+                        </div>
+                    </div>
+                    <div class="ai-library-content">
+                        <p>此题库包含代数方程相关的各类题目，涵盖一元二次方程、二元一次方程组、分式方程等核心内容。题目难度分布合理，从基础题到高阶应用题，帮助学生逐步掌握代数方程的解法与应用。</p>
+                        <p>题库中的题目经过AI智能筛选，针对中考高频考点进行强化训练，帮助学生快速提升解题能力。</p>
+                    </div>
+                    
+                    <div class="ai-library-questions">
+                        <div class="questions-title">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>题库题目示例</span>
+                        </div>
+                        <div class="question-item">
+                            <strong>题目1：</strong> 解方程：2x² - 5x - 3 = 0
+                        </div>
+                        <div class="question-item">
+                            <strong>题目2：</strong> 已知方程 x² + (k-1)x + k = 0 有两个相等的实数根，求 k 的值。
+                        </div>
+                        <div class="question-item">
+                            <strong>题目3：</strong> 解方程组：
+                            <div>2x + y = 7</div>
+                            <div>x - y = 1</div>
+                        </div>
+                        <div class="question-item">
+                            <strong>题目4：</strong> 某商场将进货价为30元的台灯以40元售出，平均每月能售出600个。市场调查表明：这种台灯的售价每上涨1元，其销售量就将减少10个。为了实现平均每月10000元的销售利润，这种台灯的售价应定为多少元？
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 相机模态框 -->
+        <div class="camera-modal" id="cameraModal">
+            <div class="camera-container">
+                <div class="camera-header">
+                    <div>上传题目图片</div>
+                    <button class="close-camera" onclick="closeCamera()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="camera-preview" id="cameraPreview">
+                    <i class="fas fa-cloud-upload-alt fa-4x"></i>
+                    <div style="margin-top: 20px; font-size: 18px;">拖放图片或点击下方按钮上传</div>
+                    <div class="drag-overlay" id="dragOverlay">
+                        <i class="fas fa-cloud-upload-alt fa-3x"></i>
+                        <div style="margin-top: 15px;">松开鼠标上传图片</div>
+                    </div>
+                </div>
+                <div class="camera-actions">
+                    <!-- 添加文件输入 -->
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                    <button class="camera-action-btn album-btn" id="albumBtn" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-images"></i> 选择图片文件
+                    </button>
+                    <button class="camera-action-btn recognize-btn" id="recognizeBtn" style="display:none;" onclick="recognizeQuestions()">
+                        <i class="fas fa-brain"></i> 习题识别
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+
+        
+        <!-- 试卷展示模态框 -->
+        <div class="exercise-modal" id="exerciseModal">
+            <div class="exercise-container">
+                <div class="exercise-header">
+                    <div class="exercise-title" id="exerciseTitle">代数方程专项练习</div>
+                    <button class="close-exercise" onclick="closeExerciseModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="exercise-content" id="exercise-content-item">
+
+
+               <!--     <div class="history-item" >
+                        <div class="checkbox" onclick="toggleAiLibrary(event, this)"></div>
+
+                        <div class="history-content">
+
+                                &lt;!&ndash; 题干 &ndash;&gt;
+                                <div class="mistake-question">
+                                    已知二次函数 \( f(x) = x^2 - 4x + 3 \) 的图像特征是什么？
+                                </div>
+
+                                &lt;!&ndash; 答案 &ndash;&gt;
+                                <div class="mistake-answer">
+                                    <span class="mistake-label">答案：</span>
+                                    <span class="answer-content">开口向上，顶点(2,-1)，与x轴交点为(1,0)和(3,0)</span>
+                                </div>
+
+                                &lt;!&ndash; 解析 &ndash;&gt;
+                                <div class="mistake-analysis">
+                                    <span class="mistake-label">解析：</span>
+                                    二次函数图象由二次项系数a决定：当a>0时开口向上，a<0时开口向下。
+                                    顶点坐标公式为 \( (-\frac{b}{2a}, \frac{4ac-b^2}{4a}) \)
+                                </div>
+
+
+                                &lt;!&ndash; 考点 &ndash;&gt;
+                                <div class="mistake-points">
+                                    <span class="points-content">二次函数的图像与性质</span>
+                                </div>
+
+                        </div>
+                        <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="time-tag">2023-10-12</div>
+                    </div>
+
+
+                    <div class="history-item" >
+                        <div class="checkbox" onclick="toggleAiLibrary(event, this)"></div>
+
+                        <div class="history-content">
+
+                            &lt;!&ndash; 题干 &ndash;&gt;
+                            <div class="mistake-question">
+                                已知二次函数已知二次函数已知二次函数已知二次函数已知二次函数 \( f(x) = x^2 - 4x + 3 \) 的图像特征是什么？
+                            </div>
+
+                            &lt;!&ndash; 答案 &ndash;&gt;
+                            <div class="mistake-answer">
+                                <span class="mistake-label">答案：</span>
+                                <span class="answer-content">开口向上，顶点(2,-1)，与x轴交点为(1,0)和(3,0)</span>
+                            </div>
+
+                            &lt;!&ndash; 解析 &ndash;&gt;
+                            <div class="mistake-analysis">
+                                <span class="mistake-label">解析：</span>
+                                二次函数图象由二次项系数a决定：当a>0时开口向上，a<0时开口向下。
+                                顶点坐标公式为 \( (-\frac{b}{2a}, \frac{4ac-b^2}{4a}) \)
+                            </div>
+
+
+                            &lt;!&ndash; 考点 &ndash;&gt;
+                            <div class="mistake-points">
+                                <span class="points-content">二次函数的图像与性质</span>
+                            </div>
+                        </div>
+                        <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="time-tag">2023-10-10</div>
+                    </div>
+
+
+                    <div class="history-item" >
+                        <div class="checkbox" onclick="toggleAiLibrary(event, this)"></div>
+
+                        <div class="history-content">
+                            <div class="history-title">函数图像分析</div>
+                            <div class="history-desc">错误7次</div>
+                            <div class="history-tag">函数 · 概念混淆</div>
+                        </div>
+                        <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <div class="time-tag">2023-10-10</div>
+                    </div>
+-->
+
+               <!--
+                    <div class="exercise-info">
+                        <div class="info-item">
+                            <div class="info-label">题目数量</div>
+                            <div class="info-value" id="exerciseCount">15题</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">预计用时</div>
+                            <div class="info-value">45分钟</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">难度</div>
+                            <div class="info-value">中等</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <div class="question-title">题目1</div>
+                        <div class="question-text">
+                            解方程：2x² - 5x - 3 = 0
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <div class="question-title">题目2</div>
+                        <div class="question-text">
+                            已知方程 x² + (k-1)x + k = 0 有两个相等的实数根，求 k 的值。
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <div class="question-title">题目3</div>
+                        <div class="question-text">
+                            解方程组：
+                            <div>2x + y = 7</div>
+                            <div>x - y = 1</div>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <div class="question-title">题目4</div>
+                        <div class="question-text">
+                            某商场将进货价为30元的台灯以40元售出，平均每月能售出600个。市场调查表明：这种台灯的售价每上涨1元，其销售量就将减少10个。为了实现平均每月10000元的销售利润，这种台灯的售价应定为多少元？
+                        </div>
+                    </div>-->
+
+
+                </div>
+                <div class="exercise-actions">
+                 <!--   <button class="exercise-btn export-btn icon-btn" onclick="exportToWord()" title="导出"><i class="fas fa-download"></i></button>-->
+                    <button class="exercise-btn copy-btn icon-btn" onclick="copyExerciseContent(event)" title="复制"><i class="fas fa-copy"></i></button>
+                    <button class="add-to-mistakes-btn" id="add-to-mistakes-button" onclick="addToMistakes()">
+                        <i class="fas fa-plus"></i> 加入错题集
+                    </button>
+                    <button class="exercise-btn add-to-ai-btn" id="exercises-library-add" onclick="openCustomNameModal()">
+                        <i class="fas fa-plus"></i> 加入AI题库
+                    </button>
+
+                </div>
+            </div>
+        </div>
+        
+        <!-- 自定义名称模态框 -->
+        <div class="custom-name-modal" id="customNameModal">
+            <div class="custom-name-container">
+                <div class="custom-name-title">加入AI题库</div>
+                <input type="text" class="custom-name-input" id="customNameInput" placeholder="请输入自定义名称" value="AI识别">
+                <div class="custom-name-actions">
+                    <button class="custom-name-btn custom-name-cancel" onclick="closeCustomNameModal()">取消</button>
+                    <button class="custom-name-btn custom-name-confirm" onclick="addToAILibrary()">确定</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 考点弹窗 -->
+        <div class="exam-points-modal" id="examPointsModal">
+            <div class="exam-points-container">
+                <div class="exam-points-header">
+                    <div class="exam-points-title">中考高频考点</div>
+                    <button class="close-exam-points" onclick="closeExamPointsModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="exam-points-content">
+                    <div class="exam-point-detail">
+                        <div class="exam-point-title">
+                            <i class="fas fa-star"></i>
+                            <span>一元二次方程</span>
+                        </div>
+                        <div class="exam-point-meta">
+                            <div class="exam-point-meta-item">
+                                <div class="meta-label">近5年出现率</div>
+                                <div class="meta-value">92%</div>
+                            </div>
+                            <div class="exam-point-meta-item">
+                                <div class="meta-label">考查题型</div>
+                                <div class="meta-value">选择、填空、解答</div>
+                            </div>
+                            <div class="exam-point-meta-item">
+                                <div class="meta-label">难度</div>
+                                <div class="meta-value">中等</div>
+                            </div>
+                        </div>
+                        <div class="exam-point-content">
+                            一元二次方程是初中数学的核心内容，考查形式多样，包括解方程、根的性质判断、实际应用题等。重点掌握配方法、公式法、因式分解法等解法，以及根的判别式和韦达定理的应用。
+                        </div>
+                        <div class="exam-point-examples">
+                            <div class="examples-title">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>典型例题</span>
+                            </div>
+                            <div class="example-item">
+                                <strong>题目：</strong> 解方程 x² - 5x + 6 = 0
+                            </div>
+                            <div class="example-item">
+                                <strong>题目：</strong> 已知关于x的方程 x² + (k-1)x + k = 0 有两个相等的实数根，求k的值。
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="exam-points-actions">
+                  <!--  <button class="export-exam-btn icon-btn" onclick="exportExamPoints()" title="导出"><i class="fas fa-download"></i></button>-->
+                    <button class="icon-btn" onclick="copyExamPointsContent(event)" title="复制"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 题目选择模态框 -->
+        <div class="question-select-modal" id="questionSelectModal5555">
+            <div class="question-select-container">
+                <div class="question-select-header">
+                    <div>识别到的题目</div>
+                    <button class="close-camera" onclick="closeQuestionSelectModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="question-list">
+                    <div class="question-item">
+
+                        <div class="history-item" >
+                            <div class="checkbox" onclick="toggleAiLibrary(event, this)"></div>
+
+                            <div class="history-content">
+
+                                <!-- 题干 -->
+                                <div class="mistake-question">
+                                    已知二次函数 \( f(x) = x^2 - 4x + 3 \) 的图像特征是什么？
+                                </div>
+
+                                <!-- 答案 -->
+                                <div class="mistake-answer">
+                                    <span class="mistake-label">答案：</span>
+                                    <span class="answer-content">开口向上，顶点(2,-1)，与x轴交点为(1,0)和(3,0)</span>
+                                </div>
+
+                                <!-- 解析 -->
+                                <div class="mistake-analysis">
+                                    <span class="mistake-label">解析：</span>
+                                    二次函数图象由二次项系数a决定：当a>0时开口向上，a<0时开口向下。
+                                    顶点坐标公式为 \( (-\frac{b}{2a}, \frac{4ac-b^2}{4a}) \)
+                                </div>
+
+
+                                <!-- 考点 -->
+                                <div class="mistake-points">
+                                    <span class="points-content">二次函数的图像与性质</span>
+                                </div>
+
+                            </div>
+                            <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="time-tag">2023-10-12</div>
+                        </div>
+
+
+
+
+                    </div>
+                    
+                    <div class="question-item">
+
+                        <div class="history-item" >
+                            <div class="checkbox" onclick="toggleAiLibrary(event, this)"></div>
+
+                            <div class="history-content">
+
+                                <!-- 题干 -->
+                                <div class="mistake-question">
+                                    已知二次函数 \( f(x) = x^2 - 4x + 3 \) 的图像特征是什么？
+                                </div>
+
+                                <!-- 答案 -->
+                                <div class="mistake-answer">
+                                    <span class="mistake-label">答案：</span>
+                                    <span class="answer-content">开口向上，顶点(2,-1)，与x轴交点为(1,0)和(3,0)</span>
+                                </div>
+
+                                <!-- 解析 -->
+                                <div class="mistake-analysis">
+                                    <span class="mistake-label">解析：</span>
+                                    二次函数图象由二次项系数a决定：当a>0时开口向上，a<0时开口向下。
+                                    顶点坐标公式为 \( (-\frac{b}{2a}, \frac{4ac-b^2}{4a}) \)
+                                </div>
+
+
+                                <!-- 考点 -->
+                                <div class="mistake-points">
+                                    <span class="points-content">二次函数的图像与性质</span>
+                                </div>
+
+                            </div>
+                            <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="time-tag">2023-10-12</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="question-item">
+
+                        <div class="history-item" >
+                            <div class="checkbox" onclick="toggleAiLibrary(event, this)"></div>
+
+                            <div class="history-content">
+
+                                <!-- 题干 -->
+                                <div class="mistake-question">
+                                    已知二次函数已知二次函数已知二次函数已知二次函数已知二次函数 \( f(x) = x^2 - 4x + 3 \) 的图像特征是什么？
+                                </div>
+
+                                <!-- 答案 -->
+                                <div class="mistake-answer">
+                                    <span class="mistake-label">答案：</span>
+                                    <span class="answer-content">开口向上，顶点(2,-1)，与x轴交点为(1,0)和(3,0)</span>
+                                </div>
+
+                                <!-- 解析 -->
+                                <div class="mistake-analysis">
+                                    <span class="mistake-label">解析：</span>
+                                    二次函数图象由二次项系数a决定：当a>0时开口向上，a<0时开口向下。
+                                    顶点坐标公式为 \( (-\frac{b}{2a}, \frac{4ac-b^2}{4a}) \)
+                                </div>
+
+
+                                <!-- 考点 -->
+                                <div class="mistake-points">
+                                    <span class="points-content">二次函数的图像与性质</span>
+                                </div>
+
+                            </div>
+                            <div class="delete-btn" onclick="deleteHistoryItem(event, this)">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="time-tag">2023-10-12</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="question-item">
+                        <input type="checkbox" class="question-checkbox" id="q4" checked>
+                        <div class="question-content">
+                            <div class="question-title">概率统计问题</div>
+                            <div class="year-info">2020年中考 · 单选第八题</div>
+                            <div class="question-desc">题目：抛掷两枚骰子，求点数之和为7的概率</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="question-select-actions">
+                    <button class="add-to-mistakes-btn" onclick="addToMistakes()">
+                        <i class="fas fa-plus"></i> 加入错题集
+                    </button>
+                    <button class="add-to-ai-btn" onclick="addToAILibraryFromSelection()">
+                        <i class="fas fa-robot"></i> 加入AI题库
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 登录模态框 -->
+        <!-- 登录模态框 -->
+        <div class="login-modal" id="loginModal">
+            <div class="login-container">
+                <button class="login-close" onclick="closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="login-header">
+                    <div class="login-title">欢迎使用</div>
+                    <div class="login-subtitle">AI错题提分教练系统</div>
+                </div>
+
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">邮箱</label>
+                        <input type="text" class="form-input" id="loginAccount" placeholder="请输入邮箱" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">验证码</label>
+                        <div class="code-group">
+                            <input type="text" class="form-input code-input" id="loginCode" placeholder="请输入验证码" required>
+                            <button type="button" class="get-code-btn" id="getCodeBtn">获取验证码</button>
+                        </div>
+                    </div>
+                    <div class="remember-me">
+                        <input type="checkbox" id="rememberMe" checked>
+                        <label for="rememberMe">记住我</label>
+                    </div>
+
+                    <button type="submit" class="login-btn">登录 / 注册</button>
+                </form>
+
+                <!-- 新增试用区域 -->
+                <!-- 试用区域优化 -->
+              <!--  <div class="trial-section">
+                    <div class="trial-info" style="text-align: center; margin-bottom: 15px;">
+                        <i class="fas fa-info-circle"></i>
+                        <span>剩余试用次数: <span class="trial-count" id="trialCount">5</span> 次</span>
+                    </div>
+                    <button class="trial-btn" id="trialBtn" style="width:100%">
+                        <i class="fas fa-camera"></i> 继续试用
+                    </button>
+                </div>-->
+
+            </div>
+        </div>
+
+
+        <!-- 个人信息模态框 -->
+        <div class="user-info-modal" id="userInfoModal">
+            <div class="user-info-container">
+                <button class="close-user-info" onclick="closeUserInfoModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="user-info-title">个人信息</div>
+                
+                <div class="avatar-container">
+                    <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+                        <div class="avatar-preview">
+                            <i class="fas fa-user" id="avatarIcon"></i>
+                        </div>
+                        <div class="avatar-upload-btn">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <input type="file" id="avatarInput" class="file-input" accept="image/*" onchange="handleAvatarUpload(event)">
+                </div>
+                
+                <div class="form-row">
+                    <label class="form-label">用户名</label>
+                    <input type="text" class="form-control" id="userNameInput" value="张同学">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">邮箱</label>
+                    <input type="text" class="form-control" id="emailInput" value="138******99" disabled>
+                </div>
+                <div class="form-row">
+                    <label class="form-label">班级</label>
+                    <select class="grade-select" id="gradeSelect">
+                        <option value="初一">初一</option>
+                        <option value="初二">初二</option>
+                        <option value="初三" selected>初三</option>
+                    </select>
+                </div>
+                
+                <!-- 新增省市选择 -->
+                <div class="form-row">
+                    <label class="form-label">所在地</label>
+                    <div class="location-row">
+                        <select class="form-control" id="provinceSelect">
+                            <option value="">选择省份</option>
+                            <option value="浙江" selected>浙江</option>
+                            <option value="江苏">江苏</option>
+                            <option value="广东">广东</option>
+                            <option value="北京">北京</option>
+                            <option value="上海">上海</option>
+                        </select>
+                        <select class="form-control" id="citySelect">
+                            <option value="">选择城市</option>
+                            <option value="杭州" selected>杭州</option>
+                            <option value="宁波">宁波</option>
+                            <option value="温州">温州</option>
+                            <option value="嘉兴">嘉兴</option>
+                            <option value="绍兴">绍兴</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="user-info-actions">
+                    <button class="user-info-btn user-info-cancel" onclick="closeUserInfoModal()">取消</button>
+                    <button class="user-info-btn user-info-save" onclick="saveUserInfo()">保存</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 考点详情页面 -->
+        <div class="exam-point-detail" id="exam-point-detail-wrap">
+            <div class="exam-point-title">
+                <i class="fas fa-star"></i>
+                <span>一元二次方程</span>
+            </div>
+            <div class="exam-point-meta">
+                <div class="exam-point-meta-item">
+                    <div class="meta-label">近5年出现率</div>
+                    <div class="meta-value">92%</div>
+                </div>
+                <div class="exam-point-meta-item">
+                    <div class="meta-label">考查题型</div>
+                    <div class="meta-value">选择、填空、解答</div>
+                </div>
+                <div class="exam-point-meta-item">
+                    <div class="meta-label">难度</div>
+                    <div class="meta-value">中等</div>
+                </div>
+            </div>
+            <div class="exam-point-content">
+                一元二次方程是初中数学的核心内容，考查形式多样，包括解方程、根的性质判断、实际应用题等。重点掌握配方法、公式法、因式分解法等解法，以及根的判别式和韦达定理的应用。
+            </div>
+            
+            <div class="exam-point-examples">
+                <div class="examples-title">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>典型例题</span>
+                </div>
+                <div class="example-item">
+                    <strong>题目：</strong> 解方程 x² - 5x + 6 = 0
+                </div>
+                <div class="example-item">
+                    <strong>题目：</strong> 已知关于x的方程 x² + (k-1)x + k = 0 有两个相等的实数根，求k的值。
+                </div>
+            </div>
+            
+            <button class="view-questions-btn" onclick="showPastQuestions('一元二次方程')">
+                <i class="fas fa-search"></i> 查看近5年考题
+            </button>
+        </div>
+        
+        <!-- 历年考题弹窗 -->
+        <div class="past-questions-modal" id="pastQuestionsModal">
+            <div class="past-questions-container">
+                <div class="past-questions-header">
+                    <div class="past-questions-title">近5年一元二次方程考题</div>
+                    <button class="close-past-questions" onclick="closePastQuestionsModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="past-questions-content">
+                    <div class="year-section">
+                        <div class="year-title">2023年</div>
+                        <div class="past-question-item">
+                            <div class="question-type">选择题</div>
+                            <strong>题目：</strong> 解方程 x² - 5x + 6 = 0
+                            <div class="solution">答案：x₁=2, x₂=3</div>
+                        </div>
+                        <div class="past-question-item">
+                            <div class="question-type">解答题</div>
+                            <strong>题目：</strong> 已知关于x的方程 x² + (k-1)x + k = 0 有两个相等的实数根，求k的值。
+                            <div class="solution">答案：k=1</div>
+                        </div>
+                    </div>
+                    
+                    <div class="year-section">
+                        <div class="year-title">2022年</div>
+                        <div class="past-question-item">
+                            <div class="question-type">选择题</div>
+                            <strong>题目：</strong> 解方程 2x² - 5x - 3 = 0
+                            <div class="solution">答案：x₁=-1/2, x₂=3</div>
+                        </div>
+                        <div class="past-question-item">
+                            <div class="question-type">应用题</div>
+                            <strong>题目：</strong> 某商场将进货价为30元的台灯以40元售出，平均每月能售出600个。市场调查表明：这种台灯的售价每上涨1元，其销售量就将减少10个。为了实现平均每月10000元的销售利润，这种台灯的售价应定为多少元？
+                            <div class="solution">答案：50元</div>
+                        </div>
+                    </div>
+                    
+                    <div class="year-section">
+                        <div class="year-title">2021年</div>
+                        <div class="past-question-item">
+                            <div class="question-type">填空题</div>
+                            <strong>题目：</strong> 方程 x² - 4x + 3 = 0 的根是______
+                            <div class="solution">答案：x₁=1, x₂=3</div>
+                        </div>
+                        <div class="past-question-item">
+                            <div class="question-type">解答题</div>
+                            <strong>题目：</strong> 解方程组：
+                            <div>2x + y = 7</div>
+                            <div>x - y = 1</div>
+                            <div class="solution">答案：x=3, y=1</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="past-questions-actions">
+                    <button class="print-btn export-action-btn" onclick="printPastQuestions()">
+                      <!--  <i class="fas fa-download"></i> 导出-->
+                        <i class="fas fa-copy" onclick="copyPastQuestionsContent(event)"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 消息通知弹窗 -->
+        <div class="notification-modal" id="notificationModal">
+            <div class="notification-container">
+                <button class="close-notification" onclick="closeNotificationModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="notification-title">消息通知</div>
+                <div class="notification-list">
+                    <div class="notification-item">
+                        <div class="notification-time">2023-10-20 09:30</div>
+                        <div class="notification-content">您有一份新的错题分析报告已生成，请及时查看</div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-time">2023-10-19 15:45</div>
+                        <div class="notification-content">系统已为您推荐3道函数图像相关题目，帮助您巩固薄弱知识点</div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-time">2023-10-18 11:20</div>
+                        <div class="notification-content">您的代数方程专项练习得分：92分，超过90%的同学</div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-time">2023-10-17 14:10</div>
+                        <div class="notification-content">新版本上线：新增AI智能出题功能，快来体验吧！</div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-time">2023-10-16 08:55</div>
+                        <div class="notification-content">您上传的错题已分析完成，点击查看详细解析</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽相关变量
+        let isDragging = false;
+        let currentX, currentY, initialX, initialY;
+        let xOffset = 30, yOffset = 30;
+        const dragElement = document.getElementById('cameraBtn');
+
+        function startDrag(e) {
+            e.preventDefault();
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            isDragging = true;
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                
+                xOffset = currentX;
+                yOffset = currentY;
+                
+                setTranslate(currentX, currentY, dragElement);
+            }
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', stopDrag);
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
+        
+        // 显示页面详情
+        function showDetail(title, answer, analysis, points,date) {
+            document.getElementById('exercise-question').innerHTML = title;
+            document.getElementById('answer-content').innerHTML = answer;
+            document.getElementById('analysis-content').innerHTML = analysis;
+            document.getElementById('exercise-tags').innerHTML = points;
+            document.getElementById('exercise-date-time').innerHTML = date;
+            document.getElementById('detailPage').classList.add('active');
+            hideActionBar();
+            // 添加点击外部关闭功能
+            setTimeout(() => { // 延迟以避免立即触发
+                document.addEventListener('mousedown', detailPageOutsideClick, true);
+            }, 0);
+
+        }
+        
+        function hideDetail() {
+            document.getElementById('detailPage').classList.remove('active');
+            document.removeEventListener('mousedown', detailPageOutsideClick, true);
+        }
+        
+        // 显示AI题库详情
+        function showAILibraryDetail(title,exercises) {
+            // 设置试卷标题
+            document.getElementById('exerciseTitle').innerHTML = title;
+
+            // 显示试卷模态框
+            document.getElementById('exerciseModal').style.display = 'flex';
+
+            addExerciseContentItem(exercises,'libraryPop');
+            document.getElementById('add-to-mistakes-button').style.display = 'none';
+            setTimeout(function () {
+              //隐藏添加Ai题库按钮
+             document.getElementById('exercises-library-add').style.display = 'none';
+            },1500)
+
+        }
+        
+        function hideAILibraryDetail() {
+            document.getElementById('aiLibraryPage').classList.remove('active');
+            document.removeEventListener('mousedown', aiLibraryPageOutsideClick, true);
+        }
+        
+        // 页面切换功能
+        const navItems = document.querySelectorAll('.nav-item');
+        const desktopNavItems = document.querySelectorAll('.desktop-nav-item');
+        const pages = document.querySelectorAll('.page');
+      //  const pageTitle = document.getElementById('pageTitle');
+        const cameraBtn = document.getElementById('cameraBtn');
+        
+        function switchPage(targetPageId) {
+
+            // 更新导航状态
+            navItems.forEach(i => i.classList.remove('active'));
+            desktopNavItems.forEach(i => i.classList.remove('active'));
+            
+            // 获取目标页面
+            const targetPage = document.getElementById(targetPageId);
+            
+            // 更新页面标题
+            const pageNames = {
+                'homePage': '数学错题提分教练',
+                'questionBankPage': '数学题库',
+                'reportPage': '学习报告',
+                'userPage': '个人中心'
+            };
+           // pageTitle.textContent = pageNames[targetPageId];
+            
+            // 切换页面
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            targetPage.classList.add('active');
+            
+            // 拍照按钮始终显示
+            cameraBtn.style.display = 'flex';
+            
+            // 隐藏操作栏
+            hideActionBar();
+            
+            // 滚动到顶部
+            document.querySelector('.content').scrollTop = 0;
+        }
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const targetPageId = this.getAttribute('data-target');
+                switchPage(targetPageId);
+                
+                // 移动端导航激活状态
+                navItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        desktopNavItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const targetPageId = this.getAttribute('data-target');
+                if (targetPageId) {
+                    switchPage(targetPageId);
+                    
+                    // 桌面端导航激活状态
+                    desktopNavItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // 题库选项卡切换
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                const tabType = this.getAttribute('data-tab');
+                const smartContent = document.getElementById('smartContent');
+                const historyContent = document.getElementById('historyContent');
+
+                if (tabType === 'smart') {
+
+                    smartContent.classList.add('active');
+                    historyContent.classList.remove('active');
+                    hideActionBar();
+                    document.getElementById('knowledgeFilterContainer').style.display ='none';
+                } else {
+                    historyContent.classList.add('active');
+                    smartContent.classList.remove('active');
+                    initHistoryItems();
+                    console.log('.............切换..........................');
+                   // console.log(historyItems)
+                    initFilterTags();
+                    document.getElementById('knowledgeFilterContainer').style.display ='flex';
+                }
+                
+                // 清空搜索条件
+                document.getElementById('searchInput').value = '';
+                resetSearch();
+            });
+        });
+        // 错题选择功能
+        function toggleAiLibrary(event, checkbox) {
+            try{
+            event.stopPropagation(); // 阻止事件冒泡
+            const item = checkbox.closest('.history-item');
+            checkbox.classList.toggle('checked');
+            item.classList.toggle('selected');
+            }catch (e) {}
+        }
+        // 错题选择功能
+        function toggleSelect(event, checkbox) {
+            event.stopPropagation(); // 阻止事件冒泡
+            const item = checkbox.closest('.history-item');
+            checkbox.classList.toggle('checked');
+            item.classList.toggle('selected');
+
+            // 显示/隐藏操作栏
+            const selectedItems = document.querySelectorAll('.history-item.selected');
+            const actionBar = document.getElementById('actionBar');
+            
+            if (selectedItems.length > 0) {
+                actionBar.style.display = 'flex';
+            } else {
+                actionBar.style.display = 'none';
+            }
+        }
+        
+        // 隐藏操作栏
+        function hideActionBar() {
+            document.getElementById('actionBar').style.display = 'none';
+            // 同时取消所有选择
+            document.querySelectorAll('.history-item.selected').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelectorAll('.checkbox.checked').forEach(checkbox => {
+                checkbox.classList.remove('checked');
+            });
+        }
+        // 显示原题
+        function showOriginalQuestions() {
+            try{
+            // 设置试卷标题
+            document.getElementById('exerciseTitle').textContent = '原题';
+            document.getElementById('add-to-mistakes-button').style.display='none';
+            // 设置题目数量等信息
+            const resutl = extractSelectedHistoryData();
+
+            addExerciseContentItem(resutl,"original");
+
+            // 显示试卷模态框
+            document.getElementById('exerciseModal').style.display = 'flex';
+
+            }catch (e) { }
+        }
+        // 查找历年相似题目
+        function showHistoricalQuestions() {
+            try{
+            // 设置试卷标题
+            document.getElementById('exerciseTitle').textContent = '历年相似考题';
+            document.getElementById('add-to-mistakes-button').style.display='none';
+            // 设置题目数量等信息
+          //  document.getElementById('exerciseCount').textContent = '5题';
+            // 显示试卷模态框
+            document.getElementById('exerciseModal').style.display = 'flex';
+            }catch (e) {}
+        }
+        
+        // AI智能出题
+        function showAIQuestions() {
+            document.getElementById('exerciseTitle').textContent = 'AI智能出题';
+           // document.getElementById('exerciseCount').textContent = '5题';
+            document.getElementById('add-to-mistakes-button').style.display='none';
+
+            const resutl = extractSelectedHistoryData();
+            getAiIntelligenceExam(resutl,'aiGeneration');
+
+            document.getElementById('exerciseModal').style.display = 'flex';
+        }
+        
+        // 相机功能
+        function openCamera() {
+            // 检查用户状态
+            if (!AuthManager.isLoggedIn() ) {
+
+                showLoginModal();
+                return;
+            }
+            document.getElementById('fileInput').value="";
+            document.getElementById('cameraModal').style.display = 'flex';
+            // 重置相机预览状态
+            document.getElementById('cameraPreview').innerHTML = `
+                <i class="fas fa-cloud-upload-alt fa-4x"></i>
+                <div style="margin-top: 20px; font-size: 18px;">拖放图片或点击下方按钮上传</div>
+            `;
+            // 显示相册按钮
+            document.getElementById('albumBtn').style.display = 'flex';
+            // 隐藏识别按钮
+            document.getElementById('recognizeBtn').style.display = 'none';
+            // 重置拖拽状态
+            document.getElementById('dragOverlay').classList.remove('active');
+            
+            // 添加拖拽事件监听器
+            setupDragEvents();
+        }
+        
+        function closeCamera() {
+            document.getElementById('cameraModal').style.display = 'none';
+        }
+        
+        // 设置拖拽事件
+        function setupDragEvents() {
+            const preview = document.getElementById('cameraPreview');
+            const dragOverlay = document.getElementById('dragOverlay');
+            
+            preview.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dragOverlay.classList.add('active');
+            });
+            
+            preview.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                dragOverlay.classList.remove('active');
+            });
+            
+            preview.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dragOverlay.classList.remove('active');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    handleFileUpload(file);
+                }
+            });
+        }
+        
+        // 文件上传处理
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+
+            if (e.target.files.length > 0) {
+
+                const file = e.target.files[0];
+                handleFileUpload(file);
+            }
+        });
+        
+        // 处理文件上传
+        function handleFileUpload(file) {
+            try{
+                const preview = document.getElementById('cameraPreview');
+
+                // 检查文件类型是否为图片
+                if (!file.type.match('image.*')) {
+                    alert('请上传图片文件');
+                    return;
+                }
+                currentFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `
+                        <img id="cameraPreview-img" src="${e.target.result}" style="max-width: 100%; max-height: 350px; object-fit: contain;">
+                        <button class="camera-action-btn album-btn" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-redo"></i> 重新选择
+                        </button>
+                    `;
+
+                    // 显示习题识别按钮
+                    document.getElementById('albumBtn').style.display = 'none';
+                    document.getElementById('recognizeBtn').style.display = 'flex';
+                };
+                reader.readAsDataURL(file);
+            }catch (e) {}
+        }
+        
+        // 习题识别功能
+        function recognizeQuestions1() {
+            const preview = document.getElementById('cameraPreview');
+            preview.innerHTML = '<i class="fas fa-spinner fa-spin fa-3x"></i><div style="margin-top: 20px; font-size: 18px;">正在识别习题...</div>';
+            
+            setTimeout(() => {
+                closeCamera();
+                // 显示题目选择模态框
+                document.getElementById('exerciseModal').style.display = 'flex';
+            }, 1500);
+        }
+        
+        // 题目选择功能
+        function closeQuestionSelectModal() {
+            document.getElementById('exerciseModal').style.display = 'none';
+        }
+        
+        // 添加到错题集
+        function addToMistakes() {
+
+            try{
+                // 获取选中的题目
+                const selectedQuestions = document.querySelectorAll('.checked');
+                try{
+                    // 添加到错题本
+                    selectedQuestions.forEach(question => {
+                        const title = question.closest('.question-item').querySelector('.mistake-question').innerHTML;
+                        const answer = question.closest('.question-item').querySelector('.answer-content').innerHTML;
+                        const analysis = question.closest('.question-item').querySelector('.analysis-content').innerHTML;
+                        const points = question.closest('.question-item').querySelector('.points-content').innerHTML;
+                        const time = question.closest('.question-item').querySelector('.time-tag').innerHTML;
+
+                        console.log('有换行吗');
+                        console.log(title);
+
+                        console.log('有换行吗3333');
+
+                        addMistakeItem(title, answer, analysis,points,time,'errorBook');
+                    });
+                }catch (e) { }
+
+
+                // 关闭模态框
+                closeQuestionSelectModal();
+
+                // 跳转到题库错题本页面
+                switchPage('questionBankPage');
+
+                // 切换到错题本选项卡
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelector('.tab[data-tab="history"]').classList.add('active');
+
+                document.getElementById('smartContent').classList.remove('active');
+                document.getElementById('historyContent').classList.add('active');
+
+                LocalStorageManager.saveHistory(historyItems);
+            }catch (e) {}
+        }
+        
+        // 添加错题条目
+        function addMistakeItem(title, answer, analysis,points,time,flag) {
+            try{
+            const historyContent = document.getElementById('historyContent');
+            // 创建新的错题条目
+            const newItem = document.createElement('div');
+            newItem.className = 'history-item';
+
+            // 添加点击事件监听器
+            newItem.addEventListener('click', function() {
+                showDetail(title, answer, analysis, points,time);
+            });
+
+            newItem.innerHTML = `
+                <div class="checkbox" onclick="toggleSelect(event, this)"></div>
+                <div class="history-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="history-content">
+                    <div class="history-title">${title}</div>
+                    <div class="history-answer-hide">${answer}</div>
+                    <div class="history-analysis-hide">${analysis}</div>
+                    <div class="history-points">${points}</div>
+                </div>
+                <div class="delete-btn" onclick="deleteHistoryItem(event, this, ${flag})">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="time-tag">${time}</div>
+            `;
+
+            // 添加到错题本顶部
+            historyContent.insertBefore(newItem, historyContent.children[1]);
+
+              var curErrorItem =  {
+                    id: 1,
+                    title: title,
+                    answer: answer,
+                    analysis: analysis,
+                    points: points,
+                    iconClass: "fas fa-calculator",
+                    date: time
+                }
+                historyItems.unshift(curErrorItem);
+                LocalStorageManager.saveHistory(historyItems);
+
+
+            }catch (e) {}
+        }
+        
+        // 添加到AI题库
+        function addToAILibraryFromSelection() {
+
+            // 获取选中的题目
+            const selectedQuestions =  document.querySelectorAll('.history-item.selected');
+
+            if (selectedQuestions.length === 0) {
+                alert('请选择要添加到AI题库的题目');
+                return;
+            }
+
+            openCustomNameModal();
+
+        }
+        
+        // 侧边栏折叠功能
+        function toggleSidebar() {
+            const sidebar = document.getElementById('desktopSidebar');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            sidebar.classList.toggle('sidebar-collapsed');
+            
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                toggleBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            } else {
+                toggleBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            }
+        }
+        
+        // 试卷展示功能
+        function showExercise(title, count) {
+            document.getElementById('exerciseTitle').textContent = `${title}专项练习`;
+            document.getElementById('exerciseCount').textContent = `${count}题`;
+            document.getElementById('exerciseModal').style.display = 'flex';
+        }
+        
+        function closeExerciseModal() {
+            document.getElementById('exerciseModal').style.display = 'none';
+        }
+        
+        // 导出为Word功能
+        function exportToWord() {
+            // 在实际应用中，这里会调用导出功能
+            setTimeout(() => {
+                alert('导出成功！');
+            }, 1000);
+        }
+        
+        // 打开自定义名称模态框
+        function openCustomNameModal() {
+            document.getElementById('customNameModal').style.display = 'flex';
+        }
+        
+        // 关闭自定义名称模态框
+        function closeCustomNameModal() {
+            document.getElementById('customNameModal').style.display = 'none';
+        }
+        
+        // 添加到AI题库
+        function addToAILibrary1() {
+            const customName = document.getElementById('customNameInput').value;
+            if (customName.trim() === '') {
+                alert('请输入自定义名称');
+                return;
+            }
+            
+            // 创建新的题库卡片
+            const newCard = document.createElement('div');
+            newCard.className = 'category-card';
+            newCard.setAttribute('data-id', Date.now());
+            // 为卡片添加点击事件
+            newCard.addEventListener('click', function() {
+                showAILibraryDetail(customName);
+            });
+            newCard.innerHTML = `
+                <div class="delete-btn" >
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="category-header">
+                    <div class="category-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <div class="category-title">${customName}</div>
+                        <div class="question-count">共5道题目</div>
+                    </div>
+                </div>
+                <div class="knowledge-time">${new Date().toISOString().split('T')[0]}</div>
+            `;
+
+            // 动态获取删除按钮并绑定事件
+            const deleteBtn = newCard.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // 阻止冒泡到卡片点击事件
+                newCard.remove(); // 直接删除卡片
+            });
+            
+            // 添加到智能题库区域的最前面
+            const smartContent = document.getElementById('smartContent');
+            smartContent.insertBefore(newCard, smartContent.firstChild);
+            
+
+            closeCustomNameModal();
+            closeQuestionSelectModal();
+            
+            // 切换到AI题库
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.ai-tab').classList.add('active');
+            document.getElementById('smartContent').classList.add('active');
+            document.getElementById('historyContent').classList.remove('active');
+        }
+        // 添加到AI题库
+        function addToAILibrary() {
+            try{
+                const customName = document.getElementById('customNameInput').value;
+                if (customName.trim() === '') {
+                    alert('请输入自定义名称');
+                    return;
+                }
+
+                const smartContent = document.getElementById('smartContent');
+                const existingCards = smartContent.querySelectorAll('.category-card');
+                let existingCard = null;
+
+                // 检查是否已有同名题库
+                existingCards.forEach(card => {
+                    const titleElement = card.querySelector('.category-title');
+
+                    console.log('循环title');
+                    console.log(titleElement.textContent );
+                    console.log(customName);
+                    console.log('循环title88888888888');
+
+                    if (titleElement.textContent === customName) {
+                        existingCard = card;
+                    }
+                });
+                let curList = getSelectedQuestionsData();
+                if(curList.length<1){   alert('请选择习题!');}
+
+
+                if (existingCard) {
+                    addNewItemToLibrary(customName,curList);
+                } else {
+                    // 创建新题库
+                    createNewCard(smartContent, customName);
+                    createNewLibraryItem(customName,curList)
+                }
+                console.log('库保存前');
+                console.log(libraryData)
+                console.log('库保存前111111');
+                LocalStorageManager.saveLibrary(libraryData);
+
+                closeCustomNameModal();
+                closeQuestionSelectModal();
+                switchToAILibrary();
+
+            }catch (e) {}
+            closeCustomNameModal();
+            closeExerciseModal();
+        }
+
+        // 更新现有题库卡片
+        function updateExistingCard(card) {
+            // 更新题目数量
+            const countElement = card.querySelector('.question-count');
+            const currentCount = parseInt(countElement.innerHTML.match(/\d+/)[0]);
+            const newCount = currentCount + 5; // 假设每次添加5道题
+            countElement.textContent = `共${newCount}道题目`;
+
+            // 更新难度标签
+            /* const difficultyTag = card.querySelector('.difficulty-tag');
+            if (difficultyTag) {
+                difficultyTag.textContent = `中等题 ${newCount}道`;
+            }*/
+
+            // 更新日期
+            const dateElement = card.querySelector('.knowledge-time');
+            dateElement.textContent = new Date().toISOString().split('T')[0];
+
+            // 移动到最前面
+            const smartContent = document.getElementById('smartContent');
+            smartContent.insertBefore(card, smartContent.firstChild);
+
+            alert(`已更新题库: ${customName}`);
+        }
+
+        // 创建新题库卡片
+        function createNewCard(smartContent, customName) {
+            const newCard = document.createElement('div');
+            newCard.className = 'category-card';
+            newCard.setAttribute('data-id', Date.now());
+            newCard.innerHTML = `
+        <div class="delete-btn" onclick="deleteCard(event, this)">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="category-header">
+            <div class="category-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div>
+                <div class="category-title">${customName}</div>
+                <div class="question-count">共5道题目</div>
+            </div>
+        </div>
+        <div class="knowledge-time">${new Date().toISOString().split('T')[0]}</div>
+    `;
+            newCard.addEventListener('click', function() {
+                showAILibraryDetail(customName);
+            });
+
+            smartContent.insertBefore(newCard, smartContent.firstChild);
+            alert(`已添加到AI题库: ${customName}`);
+
+        }
+
+        // 切换到AI题库
+        function switchToAILibrary() {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.ai-tab').classList.add('active');
+            document.getElementById('smartContent').classList.add('active');
+            document.getElementById('historyContent').classList.remove('active');
+        }
+
+        // 删除题库卡片
+        function deleteCard(event, btn) {
+            event.stopPropagation(); // 阻止事件冒泡
+            const card = btn.closest('.category-card');
+
+            // 2. 获取父容器中的所有卡片
+            const cards = card.parentNode.children;
+
+            // 3. 将HTML集合转换为数组
+            const cardsArray = Array.from(cards);
+
+            // 4. 使用indexOf获取当前卡片在数组中的索引
+            const index = cardsArray.indexOf(card);
+            libraryData.splice(index, 1);
+            libraryData = removeObjectAtIndex(libraryData,index);
+            console.log('删除后');
+            LocalStorageManager.saveLibrary(libraryData);
+            console.log(libraryData)
+            console.log('删除后.....................');
+
+            card.remove();
+        }
+        
+        // 删除错题条目
+        function deleteHistoryItem(event, btn,flag) {
+            event.stopPropagation(); // 阻止事件冒泡
+            try{
+
+                const item = btn.closest('.history-item');
+                const container = item.parentElement;
+                const allItems = container.querySelectorAll('.history-item');
+                const index = Array.from(allItems).indexOf(item);
+
+
+                console.log('0000000000')
+                //console.log(historyItems)
+                console.log('222222222222222222222');
+
+                //错题集
+                if(flag == 'errorBook'){
+
+                     // 使用 splice() 修改原数组
+                    historyItems = removeObjectAtIndex(historyItems,index);
+
+                    LocalStorageManager.saveHistory(historyItems);
+                }
+                //题库弹窗
+                if(flag == 'libraryPop'){
+                    // 获取exerciseTitle的值
+                    const exerciseTitle = document.getElementById('exerciseTitle').innerText;
+                    deleteExerciseByTitleAndIndex(exerciseTitle,index);
+                    LocalStorageManager.saveLibrary(libraryData);
+                    renderAILibraryCards();
+
+                }
+
+
+
+                item.remove();
+            }catch (e) { }
+        }
+        //删除AI库中，相应的习题
+        function deleteExerciseByTitleAndIndex(title, index) {
+            // 1. 根据title查找题库
+            const library = libraryData.find(lib => lib.title === title);
+
+            if (!library) {
+                console.error(`未找到标题为"${title}"的题库`);
+                return false;
+            }
+
+            // 2. 检查索引是否有效
+            if (index < 0 || index >= library.exercises.length) {
+                console.error(`无效的索引: ${index} (题库"${title}"中共有${library.exercises.length}个习题)`);
+                return false;
+            }
+
+            // 3. 删除指定索引的习题
+            library.exercises.splice(index, 1);
+
+            // 4. 更新题库统计信息
+            library.totalCount = library.exercises.length;
+
+            console.log(`已从题库"${title}"中删除索引${index}的习题`);
+            console.log(libraryData);
+            console.log('77777777777777')
+            return true;
+        }
+        // 搜索功能
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (searchTerm === '') {
+                // 显示所有卡片
+                resetSearch();
+                return;
+            }
+            
+            // 判断当前显示的是智能题库还是错题本
+            const smartContent = document.getElementById('smartContent');
+            const historyContent = document.getElementById('historyContent');
+            if (smartContent.classList.contains('active')) {
+                // 过滤智能题库卡片
+                document.querySelectorAll('.category-card').forEach(card => {
+                    const title = card.querySelector('.category-title').textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            } else if (historyContent.classList.contains('active')) {
+                // 过滤错题本条目
+                document.querySelectorAll('.history-item').forEach(item => {
+                    const title = item.querySelector('.history-title').textContent.toLowerCase();
+                  /*  const desc = item.querySelector('.history-desc').textContent.toLowerCase();
+                    const tag = item.querySelector('.history-tag').textContent.toLowerCase();*/
+                    
+                    if (title.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        }
+        
+        // 重置搜索
+        function resetSearch() {
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.style.display = 'block';
+            });
+            document.querySelectorAll('.history-item').forEach(item => {
+                item.style.display = 'flex';
+            });
+        }
+        
+        // 考点弹窗功能
+        function showAllExamPoints(item) {
+
+            document.getElementById('examPointsModal').style.display = 'flex';
+
+            renderExamPointDetail(item);
+
+        }
+        
+        function closeExamPointsModal() {
+            document.getElementById('examPointsModal').style.display = 'none';
+        }
+        
+        function exportExamPoints() {
+            alert('考点列表已导出为PDF文件');
+            closeExamPointsModal();
+        }
+        
+        // 历年考题弹窗
+        function showPastQuestions(topic) {
+            document.getElementById('pastQuestionsModal').style.display = 'flex';
+            document.querySelector('.past-questions-title').textContent = `近5年${topic}考题`;
+        }
+        
+        function closePastQuestionsModal() {
+            document.getElementById('pastQuestionsModal').style.display = 'none';
+        }
+        
+        function printPastQuestions() {
+            alert('正在准备打印...');
+            setTimeout(() => {
+                alert('打印任务已发送到打印机');
+            }, 1000);
+        }
+        
+        // 薄弱知识点详情
+        function showKnowledgeDetail() {
+            switchPage('reportPage');
+        }
+        
+        // 生成专项练习
+        function generatePractice() {
+            const title = document.getElementById('aiLibraryTitle').innerHTML;
+            showExercise(title, 10);
+        }
+        
+        // 登录功能
+        let isLoggedIn = false;
+        
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        
+        // 个人信息管理
+        function openUserInfoModal() {
+            document.getElementById('userInfoModal').style.display = 'flex';
+        }
+        
+        function closeUserInfoModal() {
+            document.getElementById('userInfoModal').style.display = 'none';
+        }
+        
+        // 处理头像上传
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarIcon = document.getElementById('avatarIcon');
+                avatarIcon.style.display = 'none';
+                
+                const avatarPreview = document.querySelector('.avatar-preview');
+                avatarPreview.innerHTML = `<img src="${e.target.result}" alt="用户头像">`;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function saveUserInfo() {
+            const newName = document.getElementById('userNameInput').value;
+            if (newName.trim() === '') {
+                alert('用户名不能为空');
+                return;
+            }
+            // 更新用户信息（这里只是示例，实际可能需要发送到服务器）
+            document.querySelector('.user-name').textContent = newName;
+            document.querySelector('.desktop-user-name').textContent = newName;
+            
+            // 更新班级信息
+            const grade = document.getElementById('gradeSelect').value;
+            document.querySelector('.user-grade').textContent = grade;
+            document.querySelector('.desktop-user-grade').textContent = grade;
+            
+            // 更新省市信息
+            const province = document.getElementById('provinceSelect').value;
+            const city = document.getElementById('citySelect').value;
+            if (province && city) {
+                document.querySelector('.desktop-user-location').textContent = `${province} ${city}`;
+            }
+            
+            alert('个人信息保存成功！');
+            closeUserInfoModal();
+        }
+        
+        // 获取验证码
+        function getVerificationCode() {
+            const account = document.getElementById('loginAccount').value;
+            if (!account) {
+                alert('请输入手机号或邮箱');
+                return;
+            }
+            
+            const btn = document.getElementById('getCodeBtn');
+            btn.disabled = true;
+            btn.classList.add('disabled');
+            btn.innerHTML = '60秒后重新获取';
+            try{
+                        LoginVerification(account,false,"");
+            }catch (e) {}
+            let seconds = 60;
+            const timer = setInterval(() => {
+                seconds--;
+                btn.innerHTML = `${seconds}秒后重新获取`;
+                
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.classList.remove('disabled');
+                    btn.innerHTML = '获取验证码';
+                }
+            }, 1000);
+            
+            // 模拟发送验证码
+            setTimeout(() => {
+                alert(`验证码已发送到 ${account}，请注意查收`);
+            }, 1000);
+        }
+        
+        // 登录/注册
+        function login(event) {
+            event.preventDefault();
+            
+            const account = document.getElementById('loginAccount').value;
+            const code = document.getElementById('loginCode').value;
+            
+            if (!account || !code) {
+                alert('请输入手机号/邮箱和验证码');
+                return;
+            }
+
+            LoginVerification(account,true,code);
+
+
+        }
+        
+        // 退出登录（在电脑端点击无效）
+        function logout() {
+            AuthManager.logout();
+            switchPage('homePage');
+        }
+        
+        // 显示考点详情
+        function showExamPointDetail(pointName) {
+            document.getElementById('currentPointTitle').textContent = pointName;
+            document.getElementById('examPointDetail').style.display = 'block';
+        }
+        
+        // 显示消息通知
+        function openNotificationModal() {
+            document.getElementById('notificationModal').style.display = 'flex';
+        }
+        
+        function closeNotificationModal() {
+            document.getElementById('notificationModal').style.display = 'none';
+        }
+        
+        // 导出和复制功能
+        function exportAnalysis() {
+            alert('正在导出分析内容...');
+            // 实际应用中这里会实现导出功能
+        }
+        
+        function copyAnalysisContent() {
+            const analysisContent = document.querySelector('.analysis-section').innerText;
+            navigator.clipboard.writeText(analysisContent).then(() => {
+                alert('分析内容已复制到剪贴板');
+            });
+        }
+        
+        function exportAILibrary() {
+            alert('正在导出AI题库内容...');
+            // 实际应用中这里会实现导出功能
+        }
+        
+        function copyAILibraryContent() {
+            const aiContent = document.querySelector('.ai-library-detail').innerText;
+            navigator.clipboard.writeText(aiContent).then(() => {
+                alert('AI题库内容已复制到剪贴板');
+            });
+        }
+        
+        function exportReport() {
+            alert('正在导出学习报告...');
+            // 实际应用中这里会实现导出功能
+        }
+        
+        function copyReportContent(event) {
+            event.stopPropagation();
+            const reportContent = document.getElementById('reportPage').innerText;
+            navigator.clipboard.writeText(reportContent).then(() => {
+                alert('学习报告内容已复制到剪贴板');
+            });
+        }
+        
+        function copyExerciseContent(event) {
+            event.stopPropagation();
+            const exerciseContent = document.querySelector('.exercise-content').innerText;
+            navigator.clipboard.writeText(exerciseContent).then(() => {
+                alert('试卷内容已复制到剪贴板');
+            });
+        }
+        
+        function copyExamPointsContent(event) {
+            event.stopPropagation();
+            const examPointsContent = document.querySelector('.exam-points-content').innerText;
+            navigator.clipboard.writeText(examPointsContent).then(() => {
+                alert('考点内容已复制到剪贴板');
+            });
+        }
+        
+        function copyPastQuestionsContent(event) {
+            event.stopPropagation();
+            const pastQuestionsContent = document.querySelector('.past-questions-content').innerText;
+            navigator.clipboard.writeText(pastQuestionsContent).then(() => {
+                alert('历年考题内容已复制到剪贴板');
+            });
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 默认显示拍照按钮
+            cameraBtn.style.display = 'flex';
+            
+            // 初始化按钮位置
+            setTranslate(30, 30, cameraBtn);
+            
+            // 在电脑端激活AI题库选项卡
+            if (window.innerWidth >= 992) {
+                document.querySelector('.ai-tab').classList.add('active');
+            }
+
+            // 添加搜索功能
+            document.getElementById('searchBtn').addEventListener('click', performSearch);
+            document.getElementById('searchInput').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // 登录表单提交
+            document.getElementById('loginForm').addEventListener('submit', login);
+            
+            // 获取验证码按钮
+            document.getElementById('getCodeBtn').addEventListener('click', getVerificationCode);
+            // 退出登录
+            document.getElementById('logoutOption').addEventListener('click', logout);
+            // 电脑端上传题目按钮
+            document.getElementById('desktopUploadBtn').addEventListener('click', function() {
+                // 检查用户状态
+                if (!AuthManager.isLoggedIn()) {
+                    showLoginModal();
+                    return;
+                }else{
+                    openCamera();
+                }
+
+              /*  alert("000已登录吗？"+isLoggedIn)
+                if (!isLoggedIn) {
+                    showLoginModal();
+                } else {
+                    openCamera();
+                }*/
+            });
+
+            
+            // 为个人信息菜单项绑定事件
+            document.querySelector('.menu-item:first-child').addEventListener('click', function() {
+                openUserInfoModal();
+            });
+            
+            // 为消息通知菜单项绑定事件
+            document.getElementById('notificationBtn').addEventListener('click', function() {
+                openNotificationModal();
+            });
+            
+            // 为考点卡片添加点击事件
+            document.querySelectorAll('.point-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const pointName = this.getAttribute('data-point');
+                    document.getElementById('currentPointTitle').innerHTML = pointName;
+                    document.getElementById('examPointsModal').style.display = 'flex';
+                });
+            });
+            // 为首页考点卡片添加点击事件
+           /* document.querySelectorAll('.exam-points .point-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    showAllExamPoints();
+                });
+            });*/
+        });
+
+        // 电脑端右上角导出/复制按钮显示逻辑
+        function updateImageActionsDisplay() {
+            document.querySelectorAll('.question-image .image-actions').forEach(el => {
+                if (window.innerWidth >= 992) {
+                    el.style.display = 'flex';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        }
+        window.addEventListener('resize', updateImageActionsDisplay);
+        document.addEventListener('DOMContentLoaded', function() {
+            // ...原有初始化...
+            updateImageActionsDisplay();
+            // ...原有初始化...
+            // 电脑端左侧导航点击时隐藏detailPage
+            document.querySelectorAll('.desktop-nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth >= 992) {
+                        document.getElementById('detailPage').classList.remove('active');
+                        document.getElementById('aiLibraryPage').classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // 点击detailPage外部关闭
+        function detailPageOutsideClick(e) {
+            const detailPage = document.getElementById('detailPage');
+            if (!detailPage.classList.contains('active')) return;
+            if (!detailPage.contains(e.target)) {
+                hideDetail();
+            }
+        }
+
+        // 点击aiLibraryPage外部关闭
+        function aiLibraryPageOutsideClick(e) {
+            const aiLibraryPage = document.getElementById('aiLibraryPage');
+            if (!aiLibraryPage.classList.contains('active')) return;
+            if (!aiLibraryPage.contains(e.target)) {
+                hideAILibraryDetail();
+            }
+        }
+        //习题弹窗 动态添加数据
+        function addExerciseContentItem(data,flag){
+            try{
+                const container = document.getElementById('exercise-content-item');
+                // 清空容器
+                container.innerHTML = '';
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>暂无题库数据</h3>
+                    </div>
+                `;
+                    return;
+                }
+                console.log('..............................................................88.......');
+                console.log(data)
+                // 生成卡片HTML
+                data.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <div class="checkbox" onclick="toggleAiLibrary(event,this)"></div>
+                        <div class="history-content">
+                            <div class="mistake-question">${escapeHtml(item.title)}</div>
+                            <div class="mistake-answer">
+                                <span class="mistake-label">答案：</span>
+                                <span class="answer-content">${escapeHtml(item.answer)}</span>
+                            </div>
+                            <div class="mistake-analysis">
+                                <span class="mistake-label">解析：</span>
+                                <span class="analysis-content">${escapeHtml(item.analysis)}</span>
+                            </div>
+                            <div class="mistake-points">
+                                <span class="points-content">${escapeHtml(item.points)}</span>
+                            </div>
+                        </div>
+                        <div class="action-area">
+                            <div class="delete-btn" onclick="deleteHistoryItem(event,this,'${flag}')">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="time-tag">${item.date}</div>
+                        </div>
+                    `;
+                    console.log('..............................................................99.......');
+                    console.log(historyItem)
+
+                    container.appendChild(historyItem);
+                });
+            }catch(e){}
+        }
+
+        function escapeHtml(str) {
+            return str;
+            if(str.trim()==""){return str;}
+            var map = {
+                '&': '&amp;',
+                '<': ' &lt;',
+                '>': ' &gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            };
+
+            var strcon = str.replace(/[&<>"']/g, function(m) { return map[m]; });
+            if(strcon == "(" || strcon == "（"||strcon == ")" || strcon == "）")
+            {
+                strcon = "";
+            }
+            return strcon;
+        }
+
+        //获取 错题数据
+        function extractSelectedHistoryData() {
+            const historyContainer = document.getElementById('historyContent');
+            if (!historyContainer) return []; // 确保容器存在
+
+            // 获取所有选中的复选框
+            const selectedItems = historyContainer.querySelectorAll('.checkbox.checked');
+            const result = [];
+
+            selectedItems.forEach(checkbox => {
+                const historyItem = checkbox.closest('.history-item');
+                if (!historyItem) return;
+
+                // 提取所需数据
+                const titleEl = historyItem.querySelector('.history-title');
+                const answerEl = historyItem.querySelector('.history-answer-hide');
+                const analysisEl = historyItem.querySelector('.history-analysis-hide');
+                const pointsEl = historyItem.querySelector('.history-points');
+                const timeEl = historyItem.querySelector('.time-tag');
+
+                // 创建数据对象
+                const data = {
+                    title: titleEl ? titleEl.innerHTML.trim() : '',
+                    answer: answerEl ? answerEl.innerHTML.trim() : '',
+                    analysis: analysisEl ? analysisEl.innerHTML.trim() : '',
+                    points: pointsEl ? pointsEl.innerHTML.trim() : '',
+                    date: timeEl ? timeEl.innerHTML.trim() : '',
+                    dataId: historyItem.getAttribute('data-id') || ''
+                };
+
+                result.push(data);
+            });
+
+            return result;
+        }
+        //解析后 加入Ai库，获取数据
+        function getSelectedQuestionsData() {
+            const container = document.getElementById('exercise-content-item');
+            if (!container) return [];
+
+            const selectedItems = container.querySelectorAll('.history-item.selected');
+            const result = [];
+
+            selectedItems.forEach(item => {
+                // 检查是否包含选中的 history-item
+            /*    const historyItem = item.querySelector('.history-item.selected');
+                if (!historyItem) return;*/
+
+                // 提取各部分内容
+                const question = item.querySelector('.mistake-question')?.innerHTML || '';
+                const answer = item.querySelector('.answer-content')?.innerHTML || '';
+                const analysis = item.querySelector('.analysis-content')?.innerHTML || '';
+                const points = item.querySelector('.points-content')?.innerHTML || '';
+                const time = item.querySelector('.time-tag')?.innerHTML || '';
+
+                // 添加到结果数组
+                result.push({
+                    title: question.trim(),
+                    answer: answer.trim(),
+                    analysis: analysis.trim(),
+                    points: points.trim(),
+                    date: time.trim()
+                });
+            });
+
+            console.log('获取的数组对吗？？？？？？？？？？？？？？');
+            console.log(result)
+            console.log('获取的数组对吗？？？00000000000000？？？？？？？？？？？');
+
+            return result;
+        }
+        //Ai库中添加新对象
+        function createNewLibraryItem(title,list){
+            try{
+                let curItem = {
+                    id: 1,
+                    title: title,
+                    totalCount: list.length,
+                    time: new Date().toISOString().split('T')[0],
+                    icon: "fas fa-superscript",
+                    exercises: list
+                }
+
+                libraryData.unshift(curItem);
+                LocalStorageManager.saveLibrary(libraryData);
+                renderAILibraryCards();
+            }catch (e) {
+            }
+        }
+        //Ai库中 更新已有对象
+        function addNewItemToLibrary(title,list) {
+            console.log('插入已有库？？？？？？？？？')
+            insertExercises(title,list);
+            console.log('插入已有库？？？？？？？？？777777777777777')
+            renderAILibraryCards();
+        }
+        function insertExercises(targetTitle, newExercises) {
+            try{
+                console.log('插入已有库？？？？？？？？？8888888888888:::::'+targetTitle)
+                const data = libraryData;
+                // 深拷贝新数据避免污染原始数组
+                const exercisesToInsert = JSON.parse(JSON.stringify(newExercises));
+                console.log('插入已有库？？？？？？？？？9999999999999997777777777777777777777');
+                console.log(data);
+                // 查找目标对象
+                const targetCategory = data.find(category => category.title === targetTitle);
+                console.log('插入已有库？？？？？？？？？999999999999999');
+                console.log(targetCategory)
+                console.log('插入已有库？？？？？？？？？9999999999999997444444444444444444444');
+                if (targetCategory) {
+                    // 获取现有最大ID
+                    const existingIds = targetCategory.exercises.map(ex => ex.id);
+                    const maxId = existingIds.length > 0 ? Math.max(...existingIds) : 0;
+                    console.log('插入已有库？？？？？？？？？99999999999999974444444444444444444445555555555');
+                    // 更新新练习题的ID（避免重复）
+                    exercisesToInsert.forEach((exercise, index) => {
+                        exercise.id = maxId + index + 1;
+                    });
+                    console.log('插入已有库？？？？？？？？？9999999999999997444444444444444444444666666666666666666666');
+                    // 插入到现有练习题数组中
+                    targetCategory.exercises.push(...exercisesToInsert);
+                    // 更新练习题总数
+                    targetCategory.totalCount = targetCategory.exercises.length;
+                    console.log('插入后');
+                    console.log(data)
+                    console.log('插入后1111111111');
+                    libraryData = data;
+                    console.log(libraryData)
+                    console.log('插入后22222222222222222');
+                    LocalStorageManager.saveLibrary(libraryData);
+                    return data;
+                }
+            }catch (e) {
+                console.log('插入已有 库，失败！！！！！！！！！！！！！');
+                console.log(e)
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
