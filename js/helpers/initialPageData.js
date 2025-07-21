@@ -97,113 +97,9 @@ let libraryData = [
     {
         id: 1,
         title: "代数方程",
-        totalCount: 128,
+        totalCount: 2,
         time: "2023-10-20",
         icon: "fas fa-superscript",
-        exercises:[
-            {
-                id: 1,
-                title: "一元二次方程解法",
-                answer: "x = [-b ± √(b²-4ac)] / 2a",
-                analysis: "利用求根公式解方程，注意判别式的值",
-                points: "一元方程",
-                iconClass: "fas fa-calculator",
-                date: "2023-10-15"
-            },
-            {
-                id: 2,
-                title: "三角形证明题",
-                answer: "利用SSS全等证明",
-                analysis: "通过对应边相等证明三角形全等",
-                points: "几何证明",
-                iconClass: "fas fa-shapes",
-                date: "2023-10-12"
-            }]
-    },
-    {
-        id: 2,
-        title: "几何证明",
-        totalCount: 96,
-        time: "2023-10-18",
-        icon: "fas fa-shapes",
-        exercises:[
-            {
-                id: 1,
-                title: "一元二次方程解法",
-                answer: "x = [-b ± √(b²-4ac)] / 2a",
-                analysis: "利用求根公式解方程，注意判别式的值",
-                points: "一元方程",
-                iconClass: "fas fa-calculator",
-                date: "2023-10-15"
-            },
-            {
-                id: 2,
-                title: "三角形证明题",
-                answer: "利用SSS全等证明",
-                analysis: "通过对应边相等证明三角形全等",
-                points: "几何证明",
-                iconClass: "fas fa-shapes",
-                date: "2023-10-12"
-            }]
-    },
-    {
-        id: 3,
-        title: "函数图像",
-        totalCount: 112,
-        time: "2023-10-15",
-        icon: "fas fa-function",
-        exercises:[
-            {
-                id: 1,
-                title: "一元二次方程解法",
-                answer: "x = [-b ± √(b²-4ac)] / 2a",
-                analysis: "利用求根公式解方程，注意判别式的值",
-                points: "一元方程",
-                iconClass: "fas fa-calculator",
-                date: "2023-10-15"
-            },
-            {
-                id: 2,
-                title: "三角形证明题",
-                answer: "利用SSS全等证明",
-                analysis: "通过对应边相等证明三角形全等",
-                points: "几何证明",
-                iconClass: "fas fa-shapes",
-                date: "2023-10-12"
-            }]
-    },
-    {
-        id: 4,
-        title: "概率统计",
-        totalCount: 84,
-        time: "2023-10-12",
-        icon: "fas fa-chart-pie",
-        exercises:[
-            {
-                id: 1,
-                title: "一元二次方程解法",
-                answer: "x = [-b ± √(b²-4ac)] / 2a",
-                analysis: "利用求根公式解方程，注意判别式的值",
-                points: "一元方程",
-                iconClass: "fas fa-calculator",
-                date: "2023-10-15"
-            },
-            {
-                id: 2,
-                title: "三角形证明题",
-                answer: "利用SSS全等证明",
-                analysis: "通过对应边相等证明三角形全等",
-                points: "几何证明",
-                iconClass: "fas fa-shapes",
-                date: "2023-10-12"
-            }]
-    },
-    {
-        id: 5,
-        title: "三角函数",
-        totalCount: 78,
-        time: "2023-10-08",
-        icon: "fas fa-calculator",
         exercises:[
             {
                 id: 1,
@@ -239,7 +135,7 @@ function initHistoryItems() {
 
     let data = historyItems;
     let curHistoryItems = LocalStorageManager.getHistory();
-    if(curHistoryItems == null ){return;}
+    //if(curHistoryItems == null ){return;}
     try{
 
         console.log('获取存储的 错题');
