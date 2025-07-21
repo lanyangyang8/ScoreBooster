@@ -108,7 +108,7 @@ let libraryData = [
                 analysis: "利用求根公式解方程，注意判别式的值",
                 points: "一元方程",
                 iconClass: "fas fa-calculator",
-                date: "2023-10-15"
+                date: "2024-10-15"
             },
             {
                 id: 2,
@@ -117,7 +117,7 @@ let libraryData = [
                 analysis: "通过对应边相等证明三角形全等",
                 points: "几何证明",
                 iconClass: "fas fa-shapes",
-                date: "2023-10-12"
+                date: "2024-10-12"
             }]
     }
 ];
