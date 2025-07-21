@@ -17,7 +17,7 @@ let CurrentUser = '';
 let historyItems = [
     {
         id: 1,
-        title: "一222元二次方程解法",
+        title: "一元二次方程解法",
         answer: "x = [-b ± √(b²-4ac)] / 2a",
         analysis: "利用求根公式解方程，注意判别式的值",
         points: "一元方程",
@@ -26,7 +26,7 @@ let historyItems = [
     },
     {
         id: 2,
-        title: "三333角形证明题",
+        title: "三角形证明题",
         answer: "利用SSS全等证明",
         analysis: "通过对应边相等证明三角形全等",
         points: "几何证明",
@@ -35,7 +35,7 @@ let historyItems = [
     },
     {
         id: 3,
-        title: "函数444图像分析",
+        title: "函数图像分析",
         answer: "顶点在(2, -1)，开口向上",
         analysis: "二次函数图象由二次项系数a决定开口方向",
         points: "函数图像",
@@ -44,7 +44,7 @@ let historyItems = [
     },
     {
         id: 4,
-        title: "概率555统计应用题",
+        title: "概率统计应用题",
         answer: "P=1/6",
         analysis: "使用古典概率公式计算",
         points: "概率计算",
@@ -56,7 +56,7 @@ let historyItems = [
 let historyItems2 = [
     {
         id: 1,
-        title: "一222元二次方程解法",
+        title: "一元二次方程解法",
         answer: "x = [-b ± √(b²-4ac)] / 2a",
         analysis: "利用求根公式解方程，注意判别式的值",
         points: "一元方程",
@@ -65,7 +65,7 @@ let historyItems2 = [
     },
     {
         id: 2,
-        title: "三333角形证明题",
+        title: "三角形证明题",
         answer: "利用SSS全等证明",
         analysis: "通过对应边相等证明三角形全等",
         points: "几何证明",
@@ -74,7 +74,7 @@ let historyItems2 = [
     },
     {
         id: 3,
-        title: "函数444图像分析",
+        title: "函数图像分析",
         answer: "顶点在(2, -1)，开口向上",
         analysis: "二次函数图象由二次项系数a决定开口方向",
         points: "函数图像",
@@ -83,7 +83,7 @@ let historyItems2 = [
     },
     {
         id: 4,
-        title: "概率555统计应用题",
+        title: "概率统计应用题",
         answer: "P=1/6",
         analysis: "使用古典概率公式计算",
         points: "概率计算",
@@ -103,7 +103,7 @@ let libraryData = [
         exercises:[
             {
                 id: 1,
-                title: "一4444444222元二次方程解法",
+                title: "一元二次方程解法",
                 answer: "x = [-b ± √(b²-4ac)] / 2a",
                 analysis: "利用求根公式解方程，注意判别式的值",
                 points: "一元方程",
@@ -112,7 +112,7 @@ let libraryData = [
             },
             {
                 id: 2,
-                title: "三333角形证明题",
+                title: "三角形证明题",
                 answer: "利用SSS全等证明",
                 analysis: "通过对应边相等证明三角形全等",
                 points: "几何证明",
@@ -129,7 +129,7 @@ let libraryData = [
         exercises:[
             {
                 id: 1,
-                title: "一55555222元二次方程解法",
+                title: "一元二次方程解法",
                 answer: "x = [-b ± √(b²-4ac)] / 2a",
                 analysis: "利用求根公式解方程，注意判别式的值",
                 points: "一元方程",
@@ -138,7 +138,7 @@ let libraryData = [
             },
             {
                 id: 2,
-                title: "三333角形证明题",
+                title: "三角形证明题",
                 answer: "利用SSS全等证明",
                 analysis: "通过对应边相等证明三角形全等",
                 points: "几何证明",
@@ -155,7 +155,7 @@ let libraryData = [
         exercises:[
             {
                 id: 1,
-                title: "一6666222元二次方程解法",
+                title: "一元二次方程解法",
                 answer: "x = [-b ± √(b²-4ac)] / 2a",
                 analysis: "利用求根公式解方程，注意判别式的值",
                 points: "一元方程",
@@ -164,7 +164,7 @@ let libraryData = [
             },
             {
                 id: 2,
-                title: "三333角形证明题",
+                title: "三角形证明题",
                 answer: "利用SSS全等证明",
                 analysis: "通过对应边相等证明三角形全等",
                 points: "几何证明",
@@ -181,7 +181,7 @@ let libraryData = [
         exercises:[
             {
                 id: 1,
-                title: "一222元二次方程解法",
+                title: "一元二次方程解法",
                 answer: "x = [-b ± √(b²-4ac)] / 2a",
                 analysis: "利用求根公式解方程，注意判别式的值",
                 points: "一元方程",
@@ -190,7 +190,7 @@ let libraryData = [
             },
             {
                 id: 2,
-                title: "三333角形证明题",
+                title: "三角形证明题",
                 answer: "利用SSS全等证明",
                 analysis: "通过对应边相等证明三角形全等",
                 points: "几何证明",
@@ -207,7 +207,7 @@ let libraryData = [
         exercises:[
             {
                 id: 1,
-                title: "一222元二次方程解法",
+                title: "一元二次方程解法",
                 answer: "x = [-b ± √(b²-4ac)] / 2a",
                 analysis: "利用求根公式解方程，注意判别式的值",
                 points: "一元方程",
@@ -216,7 +216,7 @@ let libraryData = [
             },
             {
                 id: 2,
-                title: "三333角形证明题",
+                title: "三角形证明题",
                 answer: "利用SSS全等证明",
                 analysis: "通过对应边相等证明三角形全等",
                 points: "几何证明",
